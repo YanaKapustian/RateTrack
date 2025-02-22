@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, Text, View, SafeAreaView, StyleSheet} from 'react-native';
 import {EXCHANGE_RATE_KEY, syncStorage} from '../utils/storage';
 import {CurrencyRow} from '../components/CurrencyRow';
@@ -19,15 +19,30 @@ export const FavoritesScreen = () => {
   const [exchangeRates, setExchangeRates] = useState<Record<string, number>>(
     {},
   );
+  const [filteredCurrencies, setFilteredCurrencies] = useState<
+    [string, number][]
+  >([]);
   const [errorText, setErrorText] = useState<string | null>(null);
 
-  useEffect(() => {
-    const storedExchangeRates = syncStorage.getItem(EXCHANGE_RATE_KEY);
+  const handleFilteredCurrency = useCallback(() => {
+    const updatedFilteredCurrencies = Object.entries(exchangeRates).filter(
+      ([currency]) => favorites.includes(currency),
+    );
+    setFilteredCurrencies(updatedFilteredCurrencies);
+  }, [exchangeRates, favorites]);
 
-    if (storedExchangeRates) {
-      setExchangeRates(JSON.parse(storedExchangeRates));
+  useEffect(() => {
+    if (Object.keys(exchangeRates).length === 0) {
+      const storedExchangeRates = syncStorage.getItem(EXCHANGE_RATE_KEY);
+
+      if (storedExchangeRates) {
+        setExchangeRates(JSON.parse(storedExchangeRates));
+      }
+      handleFilteredCurrency();
+    } else {
+      handleFilteredCurrency();
     }
-  }, []);
+  }, [exchangeRates, handleFilteredCurrency]);
 
   useEffect(() => {
     if (error) {
@@ -39,10 +54,6 @@ export const FavoritesScreen = () => {
   const handleToggleFavorite = (currency: string) => {
     dispatch(toggleFavorite(currency));
   };
-
-  const filteredCurrencies = Object.entries(exchangeRates).filter(
-    ([currency]) => favorites.includes(currency),
-  );
 
   const renderItem = ({item}: {item: [string, number]}) => {
     const [currency, rate] = item;
