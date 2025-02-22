@@ -1,12 +1,12 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {syncStorage} from '../utils/storage';
+import {FAVORITES_KEY, syncStorage} from '../utils/storage';
 
 interface FavoritesState {
   currencies: string[];
 }
 
 const loadStoredFavorites = (): string[] => {
-  const storedFavorites = syncStorage.getItem('favorites');
+  const storedFavorites = syncStorage.getItem(FAVORITES_KEY);
   return storedFavorites ? JSON.parse(storedFavorites) : [];
 };
 
@@ -27,7 +27,7 @@ const favoritesSlice = createSlice({
         state.currencies.push(action.payload);
       }
 
-      syncStorage.setItem('favorites', JSON.stringify(state.currencies));
+      syncStorage.setItem(FAVORITES_KEY, JSON.stringify(state.currencies));
     },
   },
 });

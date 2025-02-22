@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
-import {syncStorage} from '../utils/storage';
+import {EXCHANGE_RATE_KEY, syncStorage} from '../utils/storage';
 import {SearchInput} from '../components/SearchInput';
 import {CurrencyRow} from '../components/CurrencyRow';
 import {favoritesSelector, toggleFavorite} from '../store/favoritesSlice';
@@ -16,10 +16,9 @@ export const ExploreScreen = () => {
   const favorites = useSelector(favoritesSelector);
 
   useEffect(() => {
-    const storedData = syncStorage.getItem('exchangeRates');
+    const storedData = syncStorage.getItem(EXCHANGE_RATE_KEY);
     if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      setExchangeRates(parsedData.rates);
+      setExchangeRates(JSON.parse(storedData));
     }
   }, []);
 

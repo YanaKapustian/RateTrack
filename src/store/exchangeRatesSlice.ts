@@ -1,6 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ExchangeRatesResponse, fixerApi} from '../api/fixerApi';
-import {syncStorage} from '../utils/storage';
+import {
+  EXCHANGE_RATE_KEY,
+  LAST_UPDATED_KEY,
+  syncStorage,
+} from '../utils/storage';
 
 interface ExchangeRatesState {
   rates: Record<string, number>;
@@ -24,11 +28,11 @@ const exchangeRatesSlice = createSlice({
         state.lastUpdated = action.payload.timestamp;
 
         syncStorage.setItem(
-          'exchangeRates',
+          EXCHANGE_RATE_KEY,
           JSON.stringify(action.payload.rates),
         );
         syncStorage.setItem(
-          'lastUpdated',
+          LAST_UPDATED_KEY,
           JSON.stringify(action.payload.timestamp),
         );
       },
