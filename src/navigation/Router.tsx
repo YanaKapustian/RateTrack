@@ -28,8 +28,6 @@ export const TabNavigator = () => (
       headerShown: false,
       tabBarActiveTintColor: COLORS.darkGreen,
       tabBarInactiveTintColor: COLORS.black,
-      tabBarStyle: styles.tabBarStyle,
-      tabBarIconStyle: styles.tabBarIconStyle,
       tabBarLabelStyle: styles.tabBarLabelStyle,
     }}>
     <Tab.Screen
@@ -40,17 +38,16 @@ export const TabNavigator = () => (
     <Tab.Screen
       name="ExploreTab"
       component={ExploreScreen}
-      options={{tabBarIcon: Search, title: 'Explore'}}
+      options={{
+        tabBarIcon: Search,
+        title: 'Explore',
+      }}
     />
   </Tab.Navigator>
 );
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  tabBarStyle: {
-    paddingRight: 8,
-  },
-  tabBarIconStyle: {marginBottom: 5},
   tabBarLabelStyle: {
     fontWeight: '600',
     lineHeight: 16,

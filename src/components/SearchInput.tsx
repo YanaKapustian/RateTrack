@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     fontSize: 16,
-    textTransform: 'uppercase',
   },
   cross: {
     fontSize: 16,

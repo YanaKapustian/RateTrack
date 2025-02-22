@@ -1,15 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, Text, View, SafeAreaView, StyleSheet} from 'react-native';
-import {syncStorage} from '../utils/storage';
+import {EXCHANGE_RATE_KEY, syncStorage} from '../utils/storage';
 import {CurrencyRow} from '../components/CurrencyRow';
 import {useGetExchangeRatesQuery} from '../api/fixerApi';
 import {favoritesSelector, toggleFavorite} from '../store/favoritesSlice';
 import {useDispatch, useSelector} from 'react-redux';
+import {getErrorText} from '../utils/errors';
+import {COLORS} from '../constants/colors';
 
 export const BASE_CURRENCY = 'EUR';
 
 export const FavoritesScreen = () => {
-  const {error} = useGetExchangeRatesQuery({}, {skip: true});
+  const {error, isLoading} = useGetExchangeRatesQuery({}, {skip: true});
 
   const dispatch = useDispatch();
   const favorites = useSelector(favoritesSelector);
@@ -18,24 +20,21 @@ export const FavoritesScreen = () => {
     {},
   );
   const [errorText, setErrorText] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedExchangeRates = syncStorage.getItem('exchangeRates');
-    const storedLastUpdated = syncStorage.getItem('lastUpdated');
+    const storedExchangeRates = syncStorage.getItem(EXCHANGE_RATE_KEY);
 
     if (storedExchangeRates) {
-      setExchangeRates(JSON.parse(storedExchangeRates).rates);
-    }
-
-    if (storedLastUpdated) {
-      setLastUpdated(storedLastUpdated);
-    }
-
-    if (!storedExchangeRates) {
-      setErrorText('Failed to fetch data. Showing offline data.');
+      setExchangeRates(JSON.parse(storedExchangeRates));
     }
   }, []);
+
+  useEffect(() => {
+    if (error) {
+      const text = getErrorText(error);
+      setErrorText(text);
+    }
+  }, [error]);
 
   const handleToggleFavorite = (currency: string) => {
     dispatch(toggleFavorite(currency));
@@ -63,16 +62,13 @@ export const FavoritesScreen = () => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={styles.title}>Favorites</Text>
-        {error && (
-          <Text style={styles.error}>
-            {errorText} Last updated at: {lastUpdated}
-          </Text>
-        )}
-        {filteredCurrencies.length === 0 && !error && (
+        {error && <Text style={styles.error}>{errorText}</Text>}
+        {filteredCurrencies.length === 0 && !isLoading && (
           <Text style={styles.noFavoritesText}>
             No favorite currencies added yet.
           </Text>
         )}
+        {isLoading && <Text style={styles.noFavoritesText}>Loading...</Text>}
         <FlatList
           data={filteredCurrencies}
           keyExtractor={([currency]) => currency}
@@ -101,8 +97,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   error: {
-    color: 'red',
-    marginBottom: 20,
+    color: COLORS.darkGreen,
+    marginBottom: 15,
     fontSize: 14,
   },
   flatList: {
