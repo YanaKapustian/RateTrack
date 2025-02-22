@@ -2,9 +2,19 @@ import React from 'react';
 import Svg, {Path, SvgProps} from 'react-native-svg';
 import {COLORS} from '../../constants/colors';
 
-export const Star = ({color = COLORS.black, ...props}: SvgProps) => {
+export const Star = ({
+  color = COLORS.black,
+  width = 24,
+  height = 24,
+  ...props
+}: SvgProps) => {
   return (
-    <Svg width="24" height="24" viewBox="0 0 16 16" fill="none" {...props}>
+    <Svg
+      width={width}
+      height={height}
+      viewBox="0 0 16 16"
+      fill="none"
+      {...props}>
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
