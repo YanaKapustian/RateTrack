@@ -4,7 +4,6 @@ export const storage = new MMKV();
 
 export const EXCHANGE_RATE_KEY = 'exchangeRates';
 export const FAVORITES_KEY = 'favorites';
-export const LAST_UPDATED_KEY = 'lastUpdated';
 
 export const syncStorage = {
   setItem: (key: string, value: string | number | boolean | ArrayBuffer) =>
