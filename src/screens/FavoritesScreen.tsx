@@ -11,7 +11,7 @@ import {COLORS} from '../constants/colors';
 export const BASE_CURRENCY = 'EUR';
 
 export const FavoritesScreen = () => {
-  const {error, isLoading} = useGetExchangeRatesQuery({}, {skip: true});
+  const {error, isLoading} = useGetExchangeRatesQuery({});
 
   const dispatch = useDispatch();
   const favorites = useSelector(favoritesSelector);
