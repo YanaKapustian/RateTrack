@@ -1,7 +1,5 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-// import {FIXER_API_KEY} from '@env';
-
-const FIXER_API_KEY = '';
+import {FIXER_API_KEY} from '@env';
 
 export interface ExchangeRatesResponse {
   success: boolean;
