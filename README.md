@@ -1,5 +1,16 @@
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
+# App Overview
+
+RateTrack enables users to:
+
+- View exchange rates for multiple currencies with respect to a base currency (EUR), as API doesn't allow to change base currency for free subscription.
+- Save favorite currencies for quick reference.
+- Search and filter currencies.
+- Use offline mode to access previously fetched exchange rates.
+
+The app’s key goal is to provide users with a smooth experience when tracking their favorite currencies, whether online or offline.
+
 # Getting Started
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
@@ -21,6 +32,15 @@ yarn start
 ## Step 2: Build and run your app
 
 With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+
+Install dependencies:
+
+```sh
+# Using npm
+npm i
+# OR using Yarn
+yarn
+```
 
 ### Android
 
@@ -62,36 +82,41 @@ If everything is set up correctly, you should see your new app running in the An
 
 This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
-## Step 3: Modify your app
+# Technical Description
 
-Now that you have successfully run the app, let's make changes!
+The app follows a simple architecture with the main focus on React Native components and Redux for state management. The architecture is designed to be scalable and maintainable by separating different concerns, such as:
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+- Components for UI rendering (CurrencyRow, SearchInput)
+- Screens for logical separation (ExploreScreen, FavoritesScreen)
+- Redux for managing the app’s global state (favorites list)
+- Utils for storage and error handling
+- API calls to fetch and store exchange rates
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+There two bottom tabs: Favorites and Explore for simple use.The core components of the app include:
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+- SearchInput: A component that allows users to search for currencies.
+- CurrencyRow: A component that displays exchange rate information for a single currency.
+- ExploreScreen: Displays a list of currencies and their exchange rates with the ability to search and filter.
+- FavoritesScreen: Shows a list of favorite currencies and their current exchange rates.
 
-## Congratulations! :tada:
+_Redux Toolkit (RTK) Query_ is used for API fetching because:
 
-You've successfully run and modified your React Native App. :partying_face:
+- Automatic State Management: RTK Query manages API state without needing to write reducers or actions.
+- Caching: It automatically caches data and reuses it, reducing unnecessary requests.
+- Error and Loading States: Built-in support for managing loading, success, and error states.
+- Declarative Syntax: Simple and clear API calls with minimal boilerplate.
 
-### Now what?
+# Offline Mode Implementation
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+Offline mode is implemented by using **MMKV**, which is the fastest key/value storage for React Native. It allows the app to store exchange rates in the local storage of the device. The app can fetch rates when online and display the last known rates when offline.
 
-# Troubleshooting
+# The app uses several libraries, including:
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+- React Navigation: For navigation between screens.
+- Redux: For state management, specifically to manage the favorites list.
+- React Native SVG: For displaying SVG icons, such as the star for favoriting currencies.
+- React Native Dotenv: To manage sensitive API keys securely.
+- MMKV: Sync storage.
+- React-native-bootsplash: To add custom bootsplash with the name of the application.
 
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+For fetching real-time exchange rates used _Fixer.io API_
